@@ -100,7 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (context) => DashboardScreen(username: username)),        );
+              builder: (context) => DashboardScreen(username: username)),
+        );
       }
     });
   }
@@ -418,20 +419,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     duration: const Duration(seconds: 2),
                     curve: Curves.fastOutSlowIn,
                     top: _isContributing ? 50.0 : 150.0,
-                    child: ListTile(
-                      leading: Icon(Icons.people, color: Colors.white),
-                      title: Text(
-                        'Contribute',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      trailing:
-                      Icon(Icons.arrow_forward_ios, color: Colors.white),
+                    child: GestureDetector(
                       onTap: () {
                         setState(() {
                           _isContributing = !_isContributing;
                         });
                         _navigateToOption(context, DashboardOptions.contribute);
                       },
+                      child: ListTile(
+                        leading: Icon(Icons.people, color: Colors.white),
+                        title: Text(
+                          'Contribute',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing:
+                        Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      ),
                     ),
                   ),
                   ListTile(
@@ -528,7 +531,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class ContributeScreen extends StatelessWidget {
+class ContributeScreen extends StatefulWidget {
+  @override
+  _ContributeScreenState createState() => _ContributeScreenState();
+}
+
+class _ContributeScreenState extends State<ContributeScreen> {
+  bool selected = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -536,7 +546,32 @@ class ContributeScreen extends StatelessWidget {
         title: Text('Contribute'),
       ),
       body: Center(
-        child: Text('Contribute Screen'),
+        child: SizedBox(
+          width: 200,
+          height: 350,
+          child: Stack(
+            children: <Widget>[
+              AnimatedPositioned(
+                width: selected ? 200.0 : 50.0,
+                height: selected ? 50.0 : 200.0,
+                top: selected ? 50.0 : 150.0,
+                duration: const Duration(seconds: 2),
+                curve: Curves.fastOutSlowIn,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selected = !selected;
+                    });
+                  },
+                  child: const ColoredBox(
+                    color: Colors.blue,
+                    child: Center(child: Text('Tap me')),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
