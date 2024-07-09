@@ -100,8 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (context) => DashboardScreen(username: username)),
-        );
+              builder: (context) => DashboardScreen(username: username)),        );
       }
     });
   }
@@ -131,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 10),
             Text(
-              "LOREM IPSUM DOLOR SIT AMET,\nCONSECTETUER ADIPISCING ELIT",
+              "LOREM IPSUM DOLOR SIT AMET,\nCONSECTETUERADIPISCING ELIT",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -175,7 +174,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 25),
             Text(
               "Don't have an account? ",
-              style: TextStyle(fontSize: 20,fontStyle: FontStyle.italic,
+              style: TextStyle(
+                fontSize: 20,
+                fontStyle: FontStyle.italic,
                 color: Colors.white,
               ),
             ),
@@ -187,7 +188,9 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 'Sign up',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                   decoration: TextDecoration.underline,
                 ),
@@ -294,7 +297,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 Text(
                   "Already have an account? ",
-                  style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontStyle: FontStyle.italic,
                     color: Colors.white,
                   ),
                 ),
@@ -306,7 +311,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   child: Text(
                     'Login',
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
                       decoration: TextDecoration.underline,
                     ),
@@ -321,14 +328,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 }
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   final String username;
 
   DashboardScreen({required this.username});
 
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  bool _isContributing = false;
+
   void _navigateToOption(BuildContext context, DashboardOptions option) {
     switch (option) {
       case DashboardOptions.contribute:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => ContributeScreen()),
+        );
         break;
       case DashboardOptions.practice:
         break;
@@ -355,10 +372,10 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Dashboard',
-          style: TextStyle(color: Colors.orange),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.orange),
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: Icon(Icons.power_settings_new, color: Colors.red),
@@ -367,88 +384,120 @@ class DashboardScreen extends StatelessWidget {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        color: Colors.black,
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              decoration: BoxDecoration(
+            SizedBox(height: 50),
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/user_avatar.png'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              widget.username,
+              style: TextStyle(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.black, width: 1),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/user_avatar.png'),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          username,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'FLutter Developer',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.edit, color: Colors.green),
-                ],
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 10),
-            Divider(),
+            Text(
+              'Flutter Developer',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 20),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+              child: ListView(
                 children: [
-                  DashboardItem(
-                    icon: Icons.people,
-                    label: 'Contribute',
-                    onTap: () =>
-                        _navigateToOption(context, DashboardOptions.contribute),
+                  AnimatedPositioned(
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.fastOutSlowIn,
+                    top: _isContributing ? 50.0 : 150.0,
+                    child: ListTile(
+                      leading: Icon(Icons.people, color: Colors.white),
+                      title: Text(
+                        'Contribute',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      trailing:
+                      Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      onTap: () {
+                        setState(() {
+                          _isContributing = !_isContributing;
+                        });
+                        _navigateToOption(context, DashboardOptions.contribute);
+                      },
+                    ),
                   ),
-                  DashboardItem(
-                    icon: Icons.school,
-                    label: 'Practice',
+                  ListTile(
+                    leading: Icon(Icons.school, color: Colors.white),
+                    title: Text(
+                      'Practice',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
                     onTap: () =>
                         _navigateToOption(context, DashboardOptions.practice),
                   ),
-                  DashboardItem(
-                    icon: Icons.book,
-                    label: 'Learn',
+                  ListTile(
+                    leading: Icon(Icons.book, color: Colors.white),
+                    title: Text(
+                      'Learn',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
                     onTap: () =>
                         _navigateToOption(context, DashboardOptions.learn),
                   ),
-                  DashboardItem(
-                    icon: Icons.star,
-                    label: 'Interests',
+                  ListTile(
+                    leading: Icon(Icons.star, color: Colors.white),
+                    title: Text(
+                      'Interests',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
                     onTap: () =>
                         _navigateToOption(context, DashboardOptions.interests),
                   ),
-                  DashboardItem(
-                    icon: Icons.help,
-                    label: 'Help & Support',
+                  ListTile(
+                    leading: Icon(Icons.help, color: Colors.white),
+                    title: Text(
+                      'Help & Support',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
                     onTap: () =>
                         _navigateToOption(context, DashboardOptions.help),
                   ),
-                  DashboardItem(
-                    icon: Icons.settings,
-                    label: 'Settings',
+                  ListTile(
+                    leading: Icon(Icons.settings, color: Colors.white),
+                    title: Text(
+                      'Settings',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
                     onTap: () =>
                         _navigateToOption(context, DashboardOptions.settings),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.logout, color: Colors.white),
+                    title: Text(
+                      'Log out',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
+                    onTap: () => _logout(context),
                   ),
                 ],
               ),
@@ -456,34 +505,38 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '',
+          ),
+        ],
+      ),
     );
   }
 }
 
-class DashboardItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  DashboardItem({required this.icon, required this.label, required this.onTap});
-
+class ContributeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.orange.shade200,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.green, size: 40),
-            SizedBox(height: 10),
-            Text(label, style: TextStyle(fontSize: 16, color: Colors.white)),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Contribute'),
+      ),
+      body: Center(
+        child: Text('Contribute Screen'),
       ),
     );
   }
